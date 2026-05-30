@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message || error.message || '请求失败'
+    const message = error.response?.data?.error || error.message || '请求失败'
     console.error('API Error:', message)
     return Promise.reject(error)
   }
@@ -21,7 +21,6 @@ export interface Banner {
   id: number
   title: string
   image: string
-  link?: string
 }
 
 export interface Product {
@@ -29,72 +28,77 @@ export interface Product {
   name: string
   description: string
   image: string
-  category: string
-  price?: number
+  category_id: number | null
+  sort_order: number
 }
 
 export interface Category {
   id: number
   name: string
-  slug: string
+  icon: string
+  sort_order: number
 }
 
 export interface Partner {
   id: number
   name: string
   logo: string
-  website?: string
+  sort_order: number
 }
 
 export interface ContactInfo {
+  id: number
   phone: string
   email: string
   address: string
-  workingHours?: string
+  map_url: string
 }
 
 export interface PaginatedResponse<T> {
   data: T[]
-  total: number
-  page: number
-  pageSize: number
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 export const getBanners = async (): Promise<Banner[]> => {
-  const response = await api.get<PaginatedResponse<Banner>>('/api/banners')
+  const response = await api.get<{ data: Banner[] }>('/banners')
   return response.data.data
 }
 
 export const getCategories = async (): Promise<Category[]> => {
-  const response = await api.get<PaginatedResponse<Category>>('/api/categories')
+  const response = await api.get<{ data: Category[] }>('/categories')
   return response.data.data
 }
 
 export const getProducts = async (params?: {
   page?: number
-  pageSize?: number
+  limit?: number
   search?: string
-  category?: string
+  categoryId?: number
 }): Promise<PaginatedResponse<Product>> => {
-  const response = await api.get<PaginatedResponse<Product>>('/api/products', {
+  const response = await api.get<PaginatedResponse<Product>>('/products', {
     params: {
       page: params?.page || 1,
-      pageSize: params?.pageSize || 9,
+      limit: params?.limit || 9,
       search: params?.search,
-      category: params?.category,
+      categoryId: params?.categoryId,
     },
   })
   return response.data
 }
 
 export const getPartners = async (): Promise<Partner[]> => {
-  const response = await api.get<PaginatedResponse<Partner>>('/api/partners')
+  const response = await api.get<{ data: Partner[] }>('/partners')
   return response.data.data
 }
 
 export const getContactInfo = async (): Promise<ContactInfo> => {
-  const response = await api.get<ContactInfo>('/api/contact')
-  return response.data
+  const response = await api.get<{ data: ContactInfo }>('/contact-info')
+  return response.data.data
 }
 
 export default api

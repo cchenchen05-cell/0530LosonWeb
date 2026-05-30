@@ -1,7 +1,11 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: '/api',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
 api.interceptors.request.use((config) => {
@@ -24,114 +28,114 @@ api.interceptors.response.use(
 )
 
 export type LoginPayload = { username: string; password: string }
-export type RegisterPayload = { username: string; password: string; name: string }
-export type User = { id: string; username: string; name: string; role: string }
+export type User = { id: number; username: string; email: string; role: string }
 export type AuthResponse = { token: string; user: User }
 
 export type Product = {
-  id: string
+  id: number
   name: string
   description: string
-  price: number
-  categoryId: string
-  categoryName?: string
-  image?: string
-  status: string
-  createdAt: string
-  updatedAt: string
+  image: string
+  category_id: number | null
+  sort_order: number
+  created_at: string
+  updated_at: string
 }
 
 export type Category = {
-  id: string
+  id: number
   name: string
-  description: string
-  slug: string
-  productCount?: number
-  createdAt: string
+  icon: string
+  sort_order: number
+  created_at: string
+  updated_at: string
 }
 
 export type Partner = {
-  id: string
+  id: number
   name: string
-  description: string
-  logo?: string
-  website?: string
-  sortOrder: number
-  status: string
-  createdAt: string
+  logo: string
+  sort_order: number
+  created_at: string
+  updated_at: string
 }
 
 export type Banner = {
-  id: string
+  id: number
   title: string
   image: string
-  link?: string
-  sortOrder: number
-  status: string
-  createdAt: string
+  sort_order: number
+  created_at: string
+  updated_at: string
 }
 
 export type ContactInfo = {
-  id: string
+  id: number
   phone: string
   email: string
   address: string
-  description: string
-  socialMedia?: Record<string, string>
+  map_url: string
+  created_at: string
+  updated_at: string
+}
+
+export type PaginatedData<T> = {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 export const authApi = {
   login: (data: LoginPayload) => api.post<AuthResponse>('/auth/login', data),
-  register: (data: RegisterPayload) => api.post<AuthResponse>('/auth/register', data),
-  getMe: () => api.get<User>('/auth/me'),
+  getMe: () => api.get<{ user: User }>('/auth/me'),
 }
 
 export const productsApi = {
-  list: (params?: { page?: number; limit?: number; search?: string; categoryId?: string }) =>
-    api.get<{ data: Product[]; total: number }>('/products', { params }),
-  create: (data: Partial<Product>) => api.post<Product>('/products', data),
-  update: (id: string, data: Partial<Product>) => api.put<Product>(`/products/${id}`, data),
-  delete: (id: string) => api.delete(`/products/${id}`),
-  getById: (id: string) => api.get<Product>(`/products/${id}`),
+  list: (params?: { page?: number; limit?: number; search?: string; categoryId?: number }) =>
+    api.get<PaginatedData<Product>>('/products', { params }),
+  create: (data: Partial<Product>) => api.post<{ data: Product }>('/products', data),
+  update: (id: number, data: Partial<Product>) => api.put<{ data: Product }>(`/products/${id}`, data),
+  delete: (id: number) => api.delete(`/products/${id}`),
+  getById: (id: number) => api.get<{ data: Product }>(`/products/${id}`),
 }
 
 export const categoriesApi = {
-  list: (params?: { page?: number; limit?: number; search?: string }) =>
-    api.get<{ data: Category[]; total: number }>('/categories', { params }),
-  create: (data: Partial<Category>) => api.post<Category>('/categories', data),
-  update: (id: string, data: Partial<Category>) => api.put<Category>(`/categories/${id}`, data),
-  delete: (id: string) => api.delete(`/categories/${id}`),
+  list: () => api.get<{ data: Category[] }>('/categories'),
+  create: (data: Partial<Category>) => api.post<{ data: Category }>('/categories', data),
+  update: (id: number, data: Partial<Category>) => api.put<{ data: Category }>(`/categories/${id}`, data),
+  delete: (id: number) => api.delete(`/categories/${id}`),
 }
 
 export const partnersApi = {
-  list: (params?: { page?: number; limit?: number; search?: string }) =>
-    api.get<{ data: Partner[]; total: number }>('/partners', { params }),
-  create: (data: Partial<Partner>) => api.post<Partner>('/partners', data),
-  update: (id: string, data: Partial<Partner>) => api.put<Partner>(`/partners/${id}`, data),
-  delete: (id: string) => api.delete(`/partners/${id}`),
-  updateSort: (id: string, sortOrder: number) => api.patch<Partner>(`/partners/${id}/sort`, { sortOrder }),
+  list: () => api.get<{ data: Partner[] }>('/partners'),
+  create: (data: Partial<Partner>) => api.post<{ data: Partner }>('/partners', data),
+  update: (id: number, data: Partial<Partner>) => api.put<{ data: Partner }>(`/partners/${id}`, data),
+  delete: (id: number) => api.delete(`/partners/${id}`),
+  updateSort: (id: number, sortOrder: number) => api.put<{ data: Partner }>(`/partners/${id}/sort`, { sortOrder }),
 }
 
 export const bannersApi = {
-  list: (params?: { page?: number; limit?: number }) =>
-    api.get<{ data: Banner[]; total: number }>('/banners', { params }),
-  create: (data: Partial<Banner>) => api.post<Banner>('/banners', data),
-  update: (id: string, data: Partial<Banner>) => api.put<Banner>(`/banners/${id}`, data),
-  delete: (id: string) => api.delete(`/banners/${id}`),
-  updateSort: (id: string, sortOrder: number) => api.patch<Banner>(`/banners/${id}/sort`, { sortOrder }),
+  list: () => api.get<{ data: Banner[] }>('/banners'),
+  create: (data: Partial<Banner>) => api.post<{ data: Banner }>('/banners', data),
+  update: (id: number, data: Partial<Banner>) => api.put<{ data: Banner }>(`/banners/${id}`, data),
+  delete: (id: number) => api.delete(`/banners/${id}`),
+  updateSort: (id: number, sortOrder: number) => api.put<{ data: Banner }>(`/banners/${id}/sort`, { sortOrder }),
 }
 
 export const contactInfoApi = {
-  get: () => api.get<ContactInfo>('/contact-info'),
-  update: (data: Partial<ContactInfo>) => api.put<ContactInfo>('/contact-info', data),
+  get: () => api.get<{ data: ContactInfo }>('/contact-info'),
+  update: (data: Partial<ContactInfo>) => api.put<{ data: ContactInfo }>('/contact-info', data),
 }
 
 export const usersApi = {
-  list: (params?: { page?: number; limit?: number; search?: string }) =>
-    api.get<{ data: User[]; total: number }>('/users', { params }),
-  create: (data: Partial<User>) => api.post<User>('/users', data),
-  update: (id: string, data: Partial<User>) => api.put<User>(`/users/${id}`, data),
-  delete: (id: string) => api.delete(`/users/${id}`),
+  list: () => api.get<{ data: User[] }>('/users'),
+  create: (data: { username: string; password: string; email: string; role: string }) => api.post<{ data: User }>('/users', data),
+  update: (id: number, data: { username?: string; email?: string; role?: string; password?: string }) => api.put<{ data: User }>(`/users/${id}`, data),
+  delete: (id: number) => api.delete(`/users/${id}`),
 }
 
 export { api as default }
