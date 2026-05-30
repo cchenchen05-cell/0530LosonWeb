@@ -1,0 +1,35 @@
+- [x] 项目使用 Monorepo 结构，包含 frontend/（前台）、admin/（后台管理）和 backend/（后端）目录
+- [x] 项目使用 TypeScript + React + Vite 技术栈
+- [x] 项目使用 Tailwind CSS 组件库，admin 端包含 shadcn/ui 风格组件
+- [x] 后端使用 Express.js + TypeScript + SQLite（使用 sql.js 作为 SQLite 驱动，未使用 Drizzle ORM）
+- [x] 数据库包含 users、products、categories、partners、banners、contact_info 表
+- [x] 用户密码使用 bcrypt 加密存储
+- [x] 使用 JWT Token 进行认证
+- [x] 管理操作有 JWT 权限验证
+- [x] 前台包含导航栏（Header.tsx 组件：Logo、导航链接、搜索框、登录按钮）
+- [x] 前台包含轮播图组件（BannerCarousel.tsx：自动切换 3s、手动导航箭头、指示点）
+- [x] 前台包含公司简介模块（CompanyIntro.tsx：图片+文字布局，含数据统计）
+- [x] 前台包含产品中心模块（ProductCenter.tsx：Tab 分类切换、卡片网格、搜索、分页）
+- [x] 前台包含合作伙伴模块（Partners.tsx）
+- [x] 前台包含联系我们模块（ContactUs.tsx）
+- [x] 前台包含底部版权信息（Footer.tsx）
+- [x] 前台页面严格遵循"代码1:1还原.md"中的布局和交互（轮播图自动播放+手动切换+指示点、产品中心Tab切换+搜索+分页、合作伙伴Logo网格、公司简介图片+文字布局、导航栏sticky+搜索框）
+- [x] 后台包含登录/登出功能（LoginPage.tsx）
+- [x] 后台包含用户管理（UsersPage.tsx：列表、新增、编辑、删除、角色分配）
+- [x] 后台包含产品管理（ProductsPage.tsx：列表、新增、编辑、删除）
+- [x] 后台包含分类管理（CategoriesPage.tsx：列表、新增、编辑、删除）
+- [x] 后台包含合作伙伴管理（PartnersPage.tsx：列表、新增、编辑、删除、排序）
+- [x] 后台包含轮播图管理（BannersPage.tsx：列表、新增、编辑、删除、排序）
+- [x] 后台包含联系信息配置页面（ContactInfoPage.tsx）
+- [x] 后台使用侧边栏导航布局（AdminLayout.tsx）
+- [x] 数据库中有模拟数据（产品、分类、合作伙伴、轮播图、用户）
+- [x] 前台所有模块可以正常展示数据（API curl 测试全部通过，数据正常返回）
+- [x] 后台所有增删改查功能正常工作（所有 CRUD API 测试通过）
+- [x] 前台轮播图自动播放且可以手动切换（BannerCarousel 组件实现 3s 自动播放 + 箭头 + 指示点）
+- [x] 前台产品中心Tab切换、搜索、分页功能正常（ProductCenter 组件实现完整功能）
+- [x] 表单提交有输入校验（Zod validators：loginSchema, registerSchema, userSchema, productSchema）
+- [x] 未登录用户无法访问后台管理页面（ProtectedRoute.tsx）
+- [x] 未认证请求无法执行管理操作（curl 测试：GET /api/users 无 token 返回 401）
+- [x] 项目可以正常启动（后端运行在 3001 端口，前端/后台构建成功）
+- [x] 技术文档已输出（包含核心页面说明、数据流转逻辑、前后端对应关系、五个维度分析）
+- [x] 测试报告已输出（包含页面展示、交互效果、表单提交、后台CRUD、异常处理、安全防护、性能指标）
